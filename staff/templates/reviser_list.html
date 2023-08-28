@@ -1,0 +1,95 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">DGEO</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">Apps</a>
+                    </li>
+                    <li class="breadcrumb-item active">Staff</li>
+                </ol>
+            </div>
+            <h4 class="page-title">Revisores</h4>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if reviser_list %}
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="buttons-table-preview">
+                        <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Posto/Graduação</th>
+                                    <th>Nome de guerra </th>
+                                    <th>Nome completo</th>
+                                    <th>Turno</th>
+                                    <th>Administrador</th>
+                                    <th>Ativo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reviser in reviser_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'activities_list_by_user' reviser.user_id %}" class="action-icon">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{reviser.posto_grad}}</td>
+                                    <td>{{reviser.nome_guerra.upper}}</td>
+                                    <td>{{reviser.nome.title}}</td>
+                                    <td>{{reviser.turno}}</td>
+                                    <td>
+                                        {% if reviser.administrador %}
+                                            <span class="badge badge-success-lighten">Sim</span>
+                                        {% else %}
+                                            <span class="badge badge-danger-lighten">Não</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if reviser.ativo %}
+                                            <span class="badge badge-success-lighten">Ativo</span>
+                                        {% else %}
+                                            <span class="badge badge-danger-lighten">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                           </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <a href="#" class="btn btn-primary btn-md">
+                                    <i class="uil-plus me-1"></i><span>Add</span>
+                                </a>
+                            </div>
+                            <h1 class="page-title">No results</h1>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

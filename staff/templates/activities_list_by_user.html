@@ -1,0 +1,82 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">RFP</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">Apps</a>
+                    </li>
+                    <li class="breadcrumb-item active">Staff</li>
+                </ol>
+            </div>
+            <h4 class="page-title">Staff List</h4>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                {% if activities_list_by_user %}
+
+                {% for activity_type in activities_list_by_user %}
+
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="buttons-table-preview">
+                            <table id="basic-datatable" class="table dt-responsive nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Etapa</th>
+                                        <th>Usuario</th>
+                                        <th>Situação</th>
+                                        <th>Início</th>
+                                        <th>Fim</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for activity in activity_type %}
+                                    <tr>
+                                        <td>{{activity.id}}</td>
+                                        <td>{{activity.etapa_id}}</td>
+                                        <td>{{activity.nome_guerra}}</td>
+                                        <td>{{activity.situacao}}</td>
+                                        <td>{{activity.data_inicio}}</td>
+                                        <td>{{activity.data_fim}}</td>
+                                        <td>{{activity.observacao}}</td>
+                                    </tr>
+                                {% endfor %}
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <a href="#" class="btn btn-primary btn-md">
+                                    <i class="uil-plus me-1"></i><span>Add</span>
+                                </a>
+                            </div>
+                            <h1 class="page-title">No results</h1>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
