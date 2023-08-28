@@ -54,7 +54,7 @@ ACTIVITY_BY_USER_SQL = """
         ON usuario.id = usuario_id 
     INNER JOIN dominio.tipo_situacao 
         ON tipo_situacao.code = tipo_situacao_id 
-    WHERE atividade.usuario_id = {} AND tipo_situacao.code = {}"""
+    WHERE tipo_situacao.code = 4"""
 
 SELECT_COUNT_ACTIVITY_BY_USER = """
     SELECT COUNT(*) FROM (
