@@ -1,6 +1,18 @@
+import datetime
+from datetime import timezone
+
+import pytz
 from sqlalchemy import create_engine, text
 
-from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES
+from dgeo_management.settings import TIME_ZONE
+from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES, \
+    CURRENT_MONTHLY_ACTIVITY_BY_USER
+
+
+def get_current_month():
+    project_timezone = pytz.timezone(TIME_ZONE)
+    current_datetime = datetime.datetime.now(project_timezone)
+    return current_datetime.month
 
 
 def create_connection(db_name):
@@ -9,7 +21,7 @@ def create_connection(db_name):
 
 
 def sql_count_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection('sap2')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string)).fetchone()[0]
@@ -18,7 +30,7 @@ def sql_count_execute(sql_string):
 
 
 def sql_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection('sap2')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string))
@@ -28,8 +40,9 @@ def sql_execute(sql_string):
 
 def monthly_activities_by_user(user_id, last_month, current_month):
     # TODO: do a refactoring in order to simplify the logic and maintain the readability
-    last_month_query_set = sql_execute(MONTHLY_ACTIVITY_BY_USER.format(user_id, last_month))
-    current_month_query_set = sql_execute(MONTHLY_ACTIVITY_BY_USER.format(user_id, current_month))
+
+    last_month_query_set = sql_execute(MONTHLY_ACTIVITY_BY_USER.format(user_id, (get_current_month() - 1)))
+    current_month_query_set = sql_execute(CURRENT_MONTHLY_ACTIVITY_BY_USER.format(user_id, get_current_month()))
     last_month_activity_dict = [dict(zip(last_month_query_set.keys(), row)) for row in last_month_query_set]
     current_month_activity_dict = [dict(zip(current_month_query_set.keys(), row)) for row in current_month_query_set]
 
@@ -98,7 +111,6 @@ def prepare_chart_data(chart_dict):
 
 
 def prepare_activity_data(activity_dict):
-
     activity_context = {}
 
     for activity, data in activity_dict.items():

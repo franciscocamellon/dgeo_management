@@ -15,8 +15,8 @@ ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success
               'pausada': ['Pausada', 'bg-warning-lighten text-warning'],
               'nao_finalizada': ['Não finalizada', 'bg-danger-lighten text-danger']}
 
-# DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
-DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
+DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
+# DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
 
 STAFF_SQL = """SELECT usuario.id AS user_id, tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, usuario.nome, 
                     perfil_producao.nome AS perfil, tipo_turno.nome as turno, usuario.administrador, usuario.ativo
@@ -68,7 +68,11 @@ SELECT_COUNT_ACTIVITY_BY_USER = """
         WHERE atividade.usuario_id = {} AND tipo_situacao.code = {}) AS foo """
 
 CURRENT_MONTHLY_ACTIVITY_BY_USER = """
-SELECT COUNT(*)
+SELECT
+    COUNT(CASE WHEN situacao = 'Em execução' THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN situacao = 'Finalizada' THEN 1 END) AS finalizada,
+    COUNT(CASE WHEN situacao = 'Pausada' THEN 1 END) AS pausada,
+    COUNT(CASE WHEN situacao = 'Não finalizada' THEN 1 END) AS nao_finalizada
 FROM (
     SELECT
         atividade.id,
@@ -86,10 +90,9 @@ FROM (
         dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
     WHERE
         atividade.usuario_id = {}
-        AND tipo_situacao.code = {}
 ) AS initial_results
-WHERE EXTRACT(MONTH FROM initial_results.data_inicio_subquery) = EXTRACT(MONTH FROM CURRENT_DATE) AND 
-    EXTRACT(YEAR FROM initial_results.data_inicio_subquery) = EXTRACT(YEAR FROM CURRENT_DATE);"""
+WHERE EXTRACT(MONTH FROM initial_results.data_inicio_subquery) = EXTRACT(MONTH FROM CURRENT_DATE)
+    AND EXTRACT(YEAR FROM initial_results.data_inicio_subquery) = EXTRACT(YEAR FROM CURRENT_DATE)"""
 
 MONTHLY_ACTIVITY_BY_USER = """
 SELECT
