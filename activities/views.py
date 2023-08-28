@@ -7,7 +7,7 @@ from utils.database_utils import create_connection
 
 # Create your views here.
 def activities_list(request):
-    engine = create_connection('sap')
+    engine = create_connection('sap2')
 
     with engine.connect() as connection:
         activities = connection.execute(text(ACTIVITY_BY_USER_SQL.format(9)))
@@ -16,11 +16,3 @@ def activities_list(request):
     return render(request, 'activities_list.html', context)
 
 
-def activities_list_by_user(request, id=None):
-    engine = create_connection('sap')
-
-    with engine.connect() as connection:
-        activities_by_user = connection.execute(text(ACTIVITY_BY_USER_SQL.format(id)))
-        context = {'activities_list': activities_by_user}
-
-    return render(request, 'activities_list_by_user.html', context)
