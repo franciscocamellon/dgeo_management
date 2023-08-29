@@ -21,7 +21,7 @@ def create_connection(db_name):
 
 
 def sql_count_execute(sql_string):
-    engine = create_connection('sap2')
+    engine = create_connection('sap')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string)).fetchone()[0]
@@ -30,7 +30,7 @@ def sql_count_execute(sql_string):
 
 
 def sql_execute(sql_string):
-    engine = create_connection('sap2')
+    engine = create_connection('sap')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string))

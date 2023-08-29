@@ -72,7 +72,7 @@
                     </div>
                     <h4 class="header-title mb-3">Atividades finalizadas por mês</h4>
                     <div dir="ltr">
-                        <canvas id="myChart" class="apex-charts" style="max-height: 300px;"></canvas>
+                        <div id="high-performing-product" class="apex-charts" data-colors="#fa6767,#e3eaef"></div>
                     </div>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
@@ -203,42 +203,48 @@
     </div>
     <!-- end row -->
   <!-- container -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-const ctx = document.getElementById('myChart');
-
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: {{chart_label|safe}},
-        datasets: [{
-            data: {{chart_data|safe}},
-            borderWidth: 1
-        }]
+var options = {
+    series: [{
+        data: {{chart_data|safe}}
+    }],
+    chart: {
+        parentHeightOffset: 0,
+        toolbar: { show: !1 },
+        type: 'bar',
+        height: 257,
+        stacked: !0
     },
-    options: {
-        responsive: true,
-        scales: {
-            xAxes: [{
-                barPercentage: 0.4,
-                categoryPercentage: 0.5
-              }],
-            yAxes: [{
-                ticks: {
-                    beginAtZero: false
-                }
-            }]
-        },
-        plugins: {
-            htmlLegend: {
-                containerID: 'legend-container',
-                },
-            legend: {
-                display: false,
-                }
+    grid: {
+        padding: { left: 0, right: 0 } },
+    plotOptions: {
+        bar: {
+            horizontal: !1,
+            columnWidth: "20%"
         }
-    }
-});
+    },
+    colors: ["#727cf5", "#e3eaef", "#727cf5", "#0acf97", "#fa5c7c", "#ffbc00"],
+    dataLabels: {
+        enabled: !1
+    },
+    stroke: { show: !0, width: 2, colors: ["transparent"] },
+    xaxis: {
+        categories: {{chart_label|safe}},
+        axisBorder: { show: !1 }
+    },
+    yaxis: { labels: { formatter: function (e) { return e + " UT" }, offsetX: -15 } },
+
+    tooltip: {
+        y: { formatter: function (e) { return e + " UT" } }
+    },
+    zoom: { enabled: !1 },
+    legend: { show: !1 },
+    fill: { opacity: 1 }
+};
+
+var chart = new ApexCharts(document.querySelector("#high-performing-product"), options);
+chart.render();
 </script>
 {% endblock content %}
