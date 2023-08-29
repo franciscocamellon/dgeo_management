@@ -208,6 +208,7 @@
 <script>
 var options = {
     series: [{
+        name: "Unidades de trabalho",
         data: {{chart_data|safe}}
     }],
     chart: {
@@ -237,7 +238,7 @@ var options = {
     yaxis: { labels: { formatter: function (e) { return e + " UT" }, offsetX: -15 } },
 
     tooltip: {
-        y: { formatter: function (e) { return e + " UT" } }
+        y: { formatter: function (e) { return e } }
     },
     zoom: { enabled: !1 },
     legend: { show: !1 },
