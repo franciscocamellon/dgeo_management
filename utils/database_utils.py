@@ -6,7 +6,8 @@ from sqlalchemy import create_engine, text
 
 from dgeo_management.settings import TIME_ZONE
 from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES, \
-    CURRENT_MONTHLY_ACTIVITY_BY_USER, SQL_TO_CHART_AVERAGE_DATA, WEEKLY_CHART_AVERAGE_DATA, SQL_TO_WEEKLY_CHART_DATA
+    CURRENT_MONTHLY_ACTIVITY_BY_USER, SQL_TO_CHART_AVERAGE_DATA, WEEKLY_CHART_AVERAGE_DATA, SQL_TO_WEEKLY_CHART_DATA, \
+    SQL_TO_DONUT_CHART_DATA
 
 
 def get_current_month():
@@ -21,7 +22,7 @@ def create_connection(db_name):
 
 
 def sql_count_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection('sap2')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string)).fetchone()[0]
@@ -30,7 +31,7 @@ def sql_count_execute(sql_string):
 
 
 def sql_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection('sap2')
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string))
@@ -100,6 +101,19 @@ def weekly_chart_by_user(user_id, average=False):
     return prepare_chart_data(chart_dict)
 
 
+def project_donut_chart(project_id, prepare=False):
+    chart_dict = {}
+    query_set = sql_execute(SQL_TO_DONUT_CHART_DATA.format(project_id))
+
+    for row in query_set:
+        chart_dict.update(dict(zip(query_set.keys(), row)))
+
+    if prepare:
+        return prepare_chart_data(chart_dict)
+
+    return prepare_donut_chart_data(chart_dict)
+
+
 def calculate_percentage_difference(first_number, last_number):
     if last_number == 0:
         return round(0, 2)
@@ -136,6 +150,17 @@ def prepare_chart_data(chart_dict):
         chart_data.append(data)
 
     return chart_label, chart_data
+
+
+def prepare_donut_chart_data(donut_chart_dict):
+    donut_chart = {}
+
+    tasks_query_set = sql_count_execute('SELECT COUNT(atividade.id) FROM macrocontrole.atividade')
+
+    for label, data in donut_chart_dict.items():
+        donut_chart[label.title()] = round((data/tasks_query_set * 100),1)
+
+    return donut_chart
 
 
 def prepare_activity_data(activity_dict):

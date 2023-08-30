@@ -10,13 +10,14 @@ STAFF_PROFILE_MAPPING = ['Aquisitor', 'Revisor', 'Validador', 'Editor', 'Prepara
 YEARS = {1: 'Jan', 2: 'Fev', 3: 'Mar', 4: 'Abr', 5: 'Mai', 6: 'Jun', 7: 'Jul', 8: 'Ago', 9: 'Set', 10: 'Out', 11: 'Nov',
          12: 'Dez'}
 
-ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success'], 'em_execucao': ['Em execução', 'bg-success-lighten text-success'],
+ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success'],
+              'em_execucao': ['Em execução', 'bg-success-lighten text-success'],
               'finalizada': ['Finalizada', 'bg-info-lighten text-info'],
               'pausada': ['Pausada', 'bg-warning-lighten text-warning'],
               'nao_finalizada': ['Não finalizada', 'bg-danger-lighten text-danger']}
 
-# DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
-DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
+DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
+# DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
 
 STAFF_SQL = """SELECT usuario.id AS user_id, tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, usuario.nome, 
                     perfil_producao.nome AS perfil, tipo_turno.nome as turno, usuario.administrador, usuario.ativo
@@ -238,3 +239,29 @@ FROM (
 WHERE data_inicio_subquery >= DATE_TRUNC('week', CURRENT_DATE)
   AND data_inicio_subquery < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week';
 """
+
+SQL_COUNT_TO_FINISHED_ACTIVITIES = """
+SELECT COUNT(atividade.id)
+FROM macrocontrole.atividade
+WHERE data_fim >= DATE_TRUNC('year', CURRENT_DATE)
+  AND data_fim <= CURRENT_DATE
+  AND tipo_situacao_id = 4;
+"""
+
+SQL_TO_DONUT_CHART_DATA = """
+SELECT
+    COUNT(CASE WHEN situacao = 1 THEN 1 END) AS nao_iniciada,
+    COUNT(CASE WHEN situacao = 2 THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN situacao = 3 THEN 1 END) AS pausada,
+    COUNT(CASE WHEN situacao = 4 THEN 1 END) AS finalizada
+FROM (
+    SELECT atividade.tipo_situacao_id AS situacao, projeto.nome, projeto.id AS projeto_id
+    FROM macrocontrole.atividade
+    INNER JOIN macrocontrole.unidade_trabalho 
+        ON unidade_trabalho.id = unidade_trabalho_id
+    INNER JOIN macrocontrole.lote 
+        ON lote.id = lote_id
+    INNER JOIN  macrocontrole.projeto 
+        ON projeto.id = projeto_id
+) AS donut_chart_data
+WHERE donut_chart_data.projeto_id = {};"""
