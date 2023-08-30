@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, text
 
 from dgeo_management.settings import TIME_ZONE
 from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES, \
-    CURRENT_MONTHLY_ACTIVITY_BY_USER
+    CURRENT_MONTHLY_ACTIVITY_BY_USER, SQL_TO_CHART_AVERAGE_DATA, WEEKLY_CHART_AVERAGE_DATA, SQL_TO_WEEKLY_CHART_DATA
 
 
 def get_current_month():
@@ -62,12 +62,40 @@ def monthly_activities_by_user(user_id, last_month, current_month):
     return prepare_activity_data(merged_activity_dict)
 
 
-def monthly_chart_by_user(user_id):
-    query_set = sql_execute(SQL_TO_CHART_DATA.format(user_id, 4))
+def monthly_chart_by_user(user_id, average=False):
+    # TODO: do a refactoring in order to simplify the logic and maintain the readability
+
     chart_dict = {}
+
+    sql_query = SQL_TO_CHART_AVERAGE_DATA.format(4) if average else SQL_TO_CHART_DATA.format(user_id, 4)
+    user_query_set = sql_count_execute('SELECT COUNT(usuario.id) FROM dgeo.usuario')
+    query_set = sql_execute(sql_query)
 
     for row in query_set:
         chart_dict.update(dict(zip(query_set.keys(), row)))
+
+    if average:
+        for month, total_data in chart_dict.items():
+            chart_dict[month] = round(total_data / user_query_set)
+
+    return prepare_chart_data(chart_dict)
+
+
+def weekly_chart_by_user(user_id, average=False):
+    # TODO: do a refactoring in order to simplify the logic and maintain the readability
+
+    chart_dict = {}
+
+    sql_query = WEEKLY_CHART_AVERAGE_DATA.format(4) if average else SQL_TO_WEEKLY_CHART_DATA.format(user_id, 4)
+    user_query_set = sql_count_execute('SELECT COUNT(usuario.id) FROM dgeo.usuario')
+    query_set = sql_execute(sql_query)
+
+    for row in query_set:
+        chart_dict.update(dict(zip(query_set.keys(), row)))
+
+    if average:
+        for month, total_data in chart_dict.items():
+            chart_dict[month] = round(total_data / user_query_set)
 
     return prepare_chart_data(chart_dict)
 

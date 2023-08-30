@@ -46,6 +46,19 @@ STAFF_SQL_BY_PROFILE = """
         ON usuario.id = perfil_producao.usuario_id
     WHERE perfil_producao.nome = '{}'"""
 
+SQL_TO_STAFF_PROFILE = """
+SELECT tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, perfil_producao.nome AS perfil
+FROM dgeo.usuario
+INNER JOIN dominio.tipo_posto_grad
+    ON usuario.tipo_posto_grad_id = tipo_posto_grad.code
+INNER JOIN (
+        SELECT perfil_producao_operador.usuario_id, perfil_producao.nome  
+        FROM macrocontrole.perfil_producao_operador
+        INNER JOIN macrocontrole.perfil_producao 
+            ON perfil_producao_operador.perfil_producao_id = perfil_producao.id) AS perfil_producao
+    ON usuario.id = perfil_producao.usuario_id
+WHERE usuario_id = {};"""
+
 ACTIVITY_BY_USER_SQL = """
     SELECT atividade.id, atividade.etapa_id, usuario.nome_guerra, tipo_situacao.nome as situacao, atividade.data_inicio,
         atividade.data_fim, atividade.observacao 
@@ -156,3 +169,72 @@ FROM (
         AND tipo_situacao.code = {}
 ) AS initial_results
 WHERE EXTRACT(YEAR FROM initial_results.data_inicio_subquery) = EXTRACT(YEAR FROM CURRENT_DATE);"""
+
+SQL_TO_WEEKLY_CHART_DATA = """
+SELECT
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 1 THEN 1 END) AS segunda,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 2 THEN 1 END) AS terça,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 3 THEN 1 END) AS quarta,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 4 THEN 1 END) AS quinta,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 5 THEN 1 END) AS sexta
+FROM (
+    SELECT
+        atividade.data_inicio AS data_inicio_subquery
+    FROM
+        macrocontrole.atividade
+    INNER JOIN
+        dgeo.usuario ON usuario.id = usuario_id
+    INNER JOIN
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    WHERE
+        atividade.usuario_id = {}
+        AND tipo_situacao.code = {}
+) AS initial_results
+WHERE data_inicio_subquery >= DATE_TRUNC('week', CURRENT_DATE)
+  AND data_inicio_subquery < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week';
+"""
+
+SQL_TO_CHART_AVERAGE_DATA = """
+SELECT
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 1 THEN 1 END) AS janeiro,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 2 THEN 1 END) AS fevereiro,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 3 THEN 1 END) AS março,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 4 THEN 1 END) AS abril,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 5 THEN 1 END) AS maio,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 6 THEN 1 END) AS junho,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 7 THEN 1 END) AS julho,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 8 THEN 1 END) AS agosto,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 9 THEN 1 END) AS setembro,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 10 THEN 1 END) AS outubro,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 11 THEN 1 END) AS novembro,
+    COUNT(CASE WHEN EXTRACT(MONTH FROM data_inicio_subquery) = 12 THEN 1 END) AS dezembro
+FROM (
+    SELECT
+        atividade.data_inicio AS data_inicio_subquery
+    FROM
+        macrocontrole.atividade
+    INNER JOIN
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    WHERE tipo_situacao.code = {}
+) AS initial_results
+WHERE EXTRACT(YEAR FROM initial_results.data_inicio_subquery) = EXTRACT(YEAR FROM CURRENT_DATE);"""
+
+WEEKLY_CHART_AVERAGE_DATA = """
+SELECT
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 1 THEN 1 END) AS segunda,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 2 THEN 1 END) AS terça,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 3 THEN 1 END) AS quarta,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 4 THEN 1 END) AS quinta,
+    COUNT(CASE WHEN EXTRACT(DOW FROM data_inicio_subquery) = 5 THEN 1 END) AS sexta
+FROM (
+    SELECT
+        atividade.data_inicio AS data_inicio_subquery
+    FROM
+        macrocontrole.atividade
+    INNER JOIN
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    WHERE tipo_situacao.code = {}
+) AS initial_results
+WHERE data_inicio_subquery >= DATE_TRUNC('week', CURRENT_DATE)
+  AND data_inicio_subquery < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week';
+"""

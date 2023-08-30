@@ -18,7 +18,7 @@
                         </a>
                     </form>
                 </div>
-                <h4 class="page-title">Dashboard</h4>
+                <h4 class="page-title">{{profile.posto_grad}} {{profile.nome_guerra.upper}} - {{profile.perfil}}</h4>
             </div>
         </div>
     </div>
@@ -52,7 +52,32 @@
     <!-- end row -->
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-5">
+            <div class="card card-h-100">
+                <div class="card-body">
+                    <div class="dropdown float-end">
+                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="mdi mdi-dots-vertical"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <!-- item-->
+                          <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
+                          <!-- item-->
+                          <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+                          <!-- item-->
+                          <a href="javascript:void(0);" class="dropdown-item">Profit</a>
+                          <!-- item-->
+                          <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                        </div>
+                    </div>
+                    <h4 class="header-title mb-3">Atividades na semana</h4>
+                    <div dir="ltr">
+                        <div id="weekly-production" class="apex-charts" data-colors="#fa6767,#e3eaef"></div>
+                    </div>
+                </div> <!-- end card-body-->
+            </div> <!-- end card-->
+        </div> <!-- end col -->
+        <div class="col-lg-7">
             <div class="card card-h-100">
                 <div class="card-body">
                     <div class="dropdown float-end">
@@ -207,15 +232,16 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 var options = {
-    series: [{
-        name: "Unidades de trabalho",
-        data: {{chart_data|safe}}
-    }],
+    series: [
+        { name: "UT's finalizadas", data: {{chart_data|safe}} },
+        { name: "Média global", data: {{average_chart_data|safe}} },
+
+    ],
     chart: {
         parentHeightOffset: 0,
         toolbar: { show: !1 },
         type: 'bar',
-        height: 257,
+        height: 380,
         stacked: !0
     },
     grid: {
@@ -226,7 +252,7 @@ var options = {
             columnWidth: "20%"
         }
     },
-    colors: ["#727cf5", "#e3eaef", "#727cf5", "#0acf97", "#fa5c7c", "#ffbc00"],
+    colors: ["#727cf5","#0acf97","#fa5c7c","#ffbc00"],
     dataLabels: {
         enabled: !1
     },
@@ -235,17 +261,81 @@ var options = {
         categories: {{chart_label|safe}},
         axisBorder: { show: !1 }
     },
-    yaxis: { labels: { formatter: function (e) { return e + " UT" }, offsetX: -15 } },
+    yaxis: { title:{text:"Unidades de Trabalho"} },
 
     tooltip: {
         y: { formatter: function (e) { return e } }
     },
     zoom: { enabled: !1 },
-    legend: { show: !1 },
+    legend:{
+        position:"top",
+        horizontalAlign:"right",
+        floating:!0,
+    },
     fill: { opacity: 1 }
 };
 
 var chart = new ApexCharts(document.querySelector("#high-performing-product"), options);
+chart.render();
+</script>
+<script>
+
+options={
+    chart:{
+        height:380,
+        type:"line",
+        zoom:{enabled:!1},
+        toolbar:{show:!1}
+    },
+    colors:["#727cf5","#0acf97","#fa5c7c","#ffbc00"],
+    dataLabels:{enabled:!0},
+    stroke:{width:[3,3],curve:"smooth"},
+    series:[
+        {name:"Operador", data: {{weekly_chart_data|safe}} },
+        {name:"Média global", data: {{weekly_average_chart_data|safe}} }
+    ],
+    title:{
+        text:" ",align:"left"
+    },
+    grid:{
+        row:{
+            colors:["transparent","transparent"],
+            opacity:.2
+        },
+        borderColor:"#f1f3fa"
+    },
+    markers:{
+        style:"inverted",
+        size:6
+    },
+    xaxis:{
+        categories:{{weekly_chart_label|safe}},
+        title:{}
+    },
+    yaxis:{
+        title:{text:"Unidades de Trabalho"},
+        min:5,
+        max:40
+    },
+    legend:{
+        position:"top",
+        horizontalAlign:"right",
+        floating:!0,
+    },
+    responsive:[
+        {
+            breakpoint:600,
+            options:{
+                chart:{
+                    toolbar:{show:!1}
+                },
+                legend:{show:!1}
+            }
+        }
+    ]
+};
+
+var chart = new ApexCharts(document.querySelector("#weekly-production"), options);
 chart.render();
 </script>
 {% endblock content %}
