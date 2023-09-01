@@ -4,6 +4,7 @@
 #  'Finalizada':4,
 #  'Não finalizada':5}
 
+MANAGEMENT_DATABASE_NAME = 'sap2'
 STAFF_PROFILE = {'Aquisitor': [], 'Revisor': [], 'Validador': [], 'Editor': [], 'Preparador': [],
                  'Revisor_Aquisitor': [], 'Revisor_PICE': []}
 STAFF_PROFILE_MAPPING = ['Aquisitor', 'Revisor', 'Validador', 'Editor', 'Preparador']
@@ -16,8 +17,8 @@ ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success
               'pausada': ['Pausada', 'bg-warning-lighten text-warning'],
               'nao_finalizada': ['Não finalizada', 'bg-danger-lighten text-danger']}
 
-# DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
-DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
+DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
+# DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
 
 STAFF_SQL = """SELECT usuario.id AS user_id, tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, usuario.nome, 
                     perfil_producao.nome AS perfil, tipo_turno.nome as turno, usuario.administrador, usuario.ativo
@@ -265,3 +266,16 @@ FROM (
         ON projeto.id = projeto_id
 ) AS donut_chart_data
 WHERE donut_chart_data.projeto_id = {};"""
+
+
+select * --etapa.id, tipo_etapa.nome AS etapa, subfase.nome AS subfase, etapa.lote_id, etapa.ordem
+from macrocontrole.etapa
+inner join dominio.tipo_etapa
+	on tipo_etapa.code = tipo_etapa_id
+inner join macrocontrole.subfase
+	on subfase.id = subfase_id
+inner join macrocontrole.fase
+	on fase.id = fase_id
+inner join dominio.tipo_fase
+	on tipo_fase.code = tipo_fase_id
+--where dominio.tipo_etapa = 1

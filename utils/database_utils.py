@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, text
 from dgeo_management.settings import TIME_ZONE
 from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES, \
     CURRENT_MONTHLY_ACTIVITY_BY_USER, SQL_TO_CHART_AVERAGE_DATA, WEEKLY_CHART_AVERAGE_DATA, SQL_TO_WEEKLY_CHART_DATA, \
-    SQL_TO_DONUT_CHART_DATA
+    SQL_TO_DONUT_CHART_DATA, MANAGEMENT_DATABASE_NAME
 
 
 def get_current_month():
@@ -22,7 +22,7 @@ def create_connection(db_name):
 
 
 def sql_count_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection(MANAGEMENT_DATABASE_NAME)
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string)).fetchone()[0]
@@ -31,7 +31,7 @@ def sql_count_execute(sql_string):
 
 
 def sql_execute(sql_string):
-    engine = create_connection('sap')
+    engine = create_connection(MANAGEMENT_DATABASE_NAME)
 
     with engine.connect() as connection:
         result = connection.execute(text(sql_string))

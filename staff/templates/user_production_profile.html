@@ -289,7 +289,10 @@ options={
     },
     colors:["#727cf5","#0acf97","#fa5c7c","#ffbc00"],
     dataLabels:{enabled:!0},
-    stroke:{width:[3,3],curve:"smooth"},
+    stroke:{
+        width:[3,3],
+        curve:"smooth"
+    },
     series:[
         {name:"Operador", data: {{weekly_chart_data|safe}} },
         {name:"Média global", data: {{weekly_average_chart_data|safe}} }
@@ -309,11 +312,12 @@ options={
         size:6
     },
     xaxis:{
-        categories:{{weekly_chart_label|safe}},
-        title:{}
+        categories:{{weekly_chart_label|safe}}
     },
     yaxis:{
-        title:{text:"Unidades de Trabalho"},
+        title:{
+            text:"Unidades de Trabalho"
+        },
         min:0,
         max:30
     },
@@ -329,7 +333,7 @@ options={
                 chart:{
                     toolbar:{show:!1}
                 },
-                legend:{show:!1}
+
             }
         }
     ]
