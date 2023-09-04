@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from utils.constants import STAFF_SQL_BY_PROFILE, SQL_TO_STAFF_PROFILE
+from utils.constants import STAFF_SQL_BY_PROFILE, SQL_TO_STAFF_PROFILE, SQL_TO_WEEKLY_TASKS
 from utils.database_utils import sql_execute, monthly_chart_by_user, monthly_activities_by_user, weekly_chart_by_user
 
 
@@ -36,7 +36,6 @@ def preparador_list(request):
 
 
 def activities_list_by_user(request, user_id=None):
-
     context = {}
     chart_label, chart_data = monthly_chart_by_user(user_id)
     average_chart_label, average_chart_data = monthly_chart_by_user(user_id, True)
@@ -48,7 +47,9 @@ def activities_list_by_user(request, user_id=None):
     weekly_chart_label, weekly_chart_data = weekly_chart_by_user(user_id)
     weekly_average_chart_label, weekly_average_chart_data = weekly_chart_by_user(user_id, True)
 
-    print(user_profile)
+    user_weekly_tasks = sql_execute(SQL_TO_WEEKLY_TASKS.format(user_id))
+
+    print(user_weekly_tasks)
     context['profile'] = user_profile.fetchone()
     context['result'] = result
     context['chart_label'] = chart_label
@@ -57,5 +58,10 @@ def activities_list_by_user(request, user_id=None):
     context['weekly_chart_label'] = weekly_chart_label
     context['weekly_chart_data'] = weekly_chart_data
     context['weekly_average_chart_data'] = weekly_average_chart_data
+    context['user_weekly_tasks'] = user_weekly_tasks
 
     return render(request, 'user_production_profile.html', context)
+
+
+def weekly_activities_by_user(request, user_id=None):
+    user_profile = sql_execute(SQL_TO_WEEKLY_TASKS.format(user_id))

@@ -27,7 +27,7 @@
         <div class="card widget-inline">
             <div class="card-body p-0">
                 <div class="row g-0">
-                    <div class="col-sm-6 col-xl-2">
+                    <div class="col-sm-6 col-xl-3">
                         <div class="card shadow-none m-0">
                             <div class="card-body text-center">
                                 <i class="dripicons-briefcase text-muted" style="font-size: 24px;"></i>
@@ -37,22 +37,12 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6 col-xl-2">
+                    <div class="col-sm-6 col-xl-3">
                         <div class="card shadow-none m-0 border-start">
                             <div class="card-body text-center">
                                 <i class="dripicons-checklist text-muted" style="font-size: 24px;"></i>
                                 <h3><span>{{tasks_query_set}}</span></h3>
                                 <p class="text-muted font-15 mb-0">Total de Atividades</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-2">
-                        <div class="card shadow-none m-0 border-start">
-                            <div class="card-body text-center">
-                                <i class="dripicons-checklist text-muted success" style="font-size: 24px;"></i>
-                                <h3><span>{{finished_tasks_query_set}}</span></h3>
-                                <p class="text-muted font-15 mb-0">Atividades Finalizadas</p>
                             </div>
                         </div>
                     </div>
@@ -86,7 +76,7 @@
 
 
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title mb-4">Project Status</h4>
@@ -98,10 +88,10 @@
                 <div class="row text-center mt-2 py-2">
                     {% for labels, data in statistics.items %}
                     <div class="col-3">
-                        <i class="mdi mdi-trending-up text-success mt-3 h3"></i>
-                        <h3 class="fw-normal">
+                        <i class="mdi mdi-trending-up text-success mt-3 h4"></i>
+                        <h4 class="fw-normal">
                             <span>{{data}}%</span>
-                        </h3>
+                        </h4>
                         <p class="text-muted mb-0">{{labels}}</p>
                     </div>
                     {% endfor %}
@@ -112,7 +102,7 @@
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="card">
             <div class="card-body">
                 <div class="dropdown float-end">
@@ -164,24 +154,10 @@
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="card">
             <div class="card-body">
-                <div class="dropdown float-end">
-                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="mdi mdi-dots-vertical"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Weekly Report</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Monthly Report</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Settings</a>
-                    </div>
-                </div>
+
                 <h4 class="header-title mb-4">Project Status</h4>
 
                 <div class="my-4 chartjs-chart" style="height: 202px;">
@@ -208,6 +184,43 @@
                         <h3 class="fw-normal">
                             <span>10%</span>
                         </h3>
+                        <p class="text-muted mb-0"> Behind</p>
+                    </div>
+                </div>
+                <!-- end row-->
+
+            </div> <!-- end card body-->
+        </div> <!-- end card -->
+    </div><!-- end col-->
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-4">Project Status</h4>
+
+                <div class="my-4 chartjs-chart" style="height: 202px;">
+                    <canvas id="4" data-colors="#42d29d,#f9bc0d,#fa6767"></canvas>
+                </div>
+
+                <div class="row text-center mt-2 py-2">
+                    <div class="col-4">
+                        <i class="mdi mdi-trending-up text-success mt-3 h4"></i>
+                        <h4 class="fw-normal">
+                            <span>64%</span>
+                        </h4>
+                        <p class="text-muted mb-0">Completed</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="mdi mdi-trending-down text-primary mt-3 h4"></i>
+                        <h4 class="fw-normal">
+                            <span>26%</span>
+                        </h4>
+                        <p class="text-muted mb-0"> In-progress</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="mdi mdi-trending-down text-danger mt-3 h4"></i>
+                        <h4 class="fw-normal">
+                            <span>10%</span>
+                        </h4>
                         <p class="text-muted mb-0"> Behind</p>
                     </div>
                 </div>

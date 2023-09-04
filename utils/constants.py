@@ -17,8 +17,8 @@ ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success
               'pausada': ['Pausada', 'bg-warning-lighten text-warning'],
               'nao_finalizada': ['Não finalizada', 'bg-danger-lighten text-danger']}
 
-DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
-# DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
+# DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
+DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
 
 STAFF_SQL = """SELECT usuario.id AS user_id, tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, usuario.nome, 
                     perfil_producao.nome AS perfil, tipo_turno.nome as turno, usuario.administrador, usuario.ativo
@@ -268,14 +268,28 @@ FROM (
 WHERE donut_chart_data.projeto_id = {};"""
 
 
-select * --etapa.id, tipo_etapa.nome AS etapa, subfase.nome AS subfase, etapa.lote_id, etapa.ordem
-from macrocontrole.etapa
-inner join dominio.tipo_etapa
-	on tipo_etapa.code = tipo_etapa_id
-inner join macrocontrole.subfase
-	on subfase.id = subfase_id
-inner join macrocontrole.fase
-	on fase.id = fase_id
-inner join dominio.tipo_fase
-	on tipo_fase.code = tipo_fase_id
---where dominio.tipo_etapa = 1
+SQL_TO_WEEKLY_TASKS = """
+SELECT atividade.id, tipo_etapa.nome AS etapa,tipo_fase.nome AS fase,subfase.nome AS subfase,
+    atividade.unidade_trabalho_id,tipo_situacao.nome AS situacao, tipo_posto_grad.nome_abrev, usuario.nome_guerra, 
+    atividade.data_inicio, atividade.data_fim
+FROM macrocontrole.atividade
+INNER JOIN macrocontrole.etapa
+    ON etapa.id = etapa_id
+INNER JOIN dominio.tipo_etapa
+    ON tipo_etapa.code = etapa.id
+INNER JOIN macrocontrole.subfase
+    ON subfase.id = subfase_id
+INNER JOIN macrocontrole.fase
+    ON fase.id = fase_id
+INNER JOIN dominio.tipo_fase
+    ON tipo_fase.code = tipo_fase_id
+INNER JOIN dominio.tipo_situacao
+    ON tipo_situacao.code = tipo_situacao_id
+INNER JOIN dgeo.usuario
+    ON usuario.id = usuario_id
+INNER JOIN dominio.tipo_posto_grad
+    ON tipo_posto_grad.code = tipo_posto_grad_id
+WHERE data_fim >= DATE_TRUNC('week', CURRENT_DATE)
+    AND data_fim < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
+    AND usuario.id = {};
+"""
