@@ -17,8 +17,8 @@ ACTIVITIES = {'nao_iniciada': ['Não iniciada', 'bg-success-lighten text-success
               'pausada': ['Pausada', 'bg-warning-lighten text-warning'],
               'nao_finalizada': ['Não finalizada', 'bg-danger-lighten text-danger']}
 
-# DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
-DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
+DGEO_DATABASE_URL = 'postgresql://postgres:r4d10gr4f14@10.1.10.213:5432/'
+# DGEO_DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/'
 
 STAFF_SQL = """SELECT usuario.id AS user_id, tipo_posto_grad.nome_abrev AS posto_grad, usuario.nome_guerra, usuario.nome, 
                     perfil_producao.nome AS perfil, tipo_turno.nome as turno, usuario.administrador, usuario.ativo
@@ -292,4 +292,33 @@ INNER JOIN dominio.tipo_posto_grad
 WHERE data_fim >= DATE_TRUNC('week', CURRENT_DATE)
     AND data_fim < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
     AND usuario.id = {};
+"""
+
+SQL_TO_COUNT_ACTIVITY_TYPE = """
+SELECT
+    COUNT(activities_type.id) AS total,
+    COUNT(CASE WHEN fase = 'Extração' THEN 1 END) AS extracao,
+    COUNT(CASE WHEN fase = 'Validação' THEN 1 END) AS validacao,
+    COUNT(CASE WHEN fase = 'Edição' THEN 1 END) AS edicao,
+    COUNT(CASE WHEN fase = 'Disseminação' THEN 1 END) AS disseminacao
+FROM (
+    SELECT
+        atividade.id, 
+        tipo_fase.nome as fase 
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
 """
