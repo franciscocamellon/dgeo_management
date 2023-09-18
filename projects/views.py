@@ -14,7 +14,7 @@ def index(request):
     production_percentage = calculate_percentage_difference(tasks_query_set, finished_tasks_query_set)
     donut_chart = project_donut_chart(1)
     donut_chart_label, donut_chart_data = project_donut_chart(1, True)
-    test = sql_execute(SQL_TO_COUNT_ACTIVITY_TYPE).fetchone()
+    # test = sql_execute(SQL_TO_COUNT_ACTIVITY_TYPE).fetchone()
 
     context['projects_query_set'] = projects_query_set
     context['tasks_query_set'] = tasks_query_set
@@ -24,5 +24,18 @@ def index(request):
     context['donut_chart_label'] = donut_chart_label
     context['donut_chart_data'] = donut_chart_data
     context['statistics'] = donut_chart
-    print(test)
+    # print(test)
+    return render(request, 'index.html', context)
+
+
+def acquisition_activities(request):
+    context = dict()
+
+    query = SQL_TO_COUNT_ACTIVITY_TYPE.format(4)
+    print('query: ', query)
+
+    acquisition_stats = sql_execute(SQL_TO_COUNT_ACTIVITY_TYPE.format(4))
+
+    context['query'] = query
+
     return render(request, 'index.html', context)

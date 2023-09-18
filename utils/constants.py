@@ -304,7 +304,8 @@ SELECT
 FROM (
     SELECT
         atividade.id, 
-        tipo_fase.nome as fase 
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase 
     FROM 
         macrocontrole.atividade
     INNER JOIN 
@@ -318,7 +319,5 @@ FROM (
     INNER JOIN 
         macrocontrole.fase ON fase.id = fase_id
     INNER JOIN 
-        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
-    ORDER BY etapa ASC
-) AS activities_type
-"""
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id ) AS activities_type
+WHERE activities_type.situacao = {};"""

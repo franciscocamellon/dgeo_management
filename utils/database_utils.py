@@ -1,6 +1,4 @@
 import datetime
-from datetime import timezone
-
 import pytz
 from sqlalchemy import create_engine, text
 
@@ -17,7 +15,7 @@ def get_current_month():
 
 
 def create_connection(db_name):
-    engine = create_engine(r'{}{}'.format(DGEO_DATABASE_URL, db_name), echo=True)
+    engine = create_engine(r'{}{}'.format(DGEO_DATABASE_URL, db_name), echo=True, pool_recycle=3600, pool_pre_ping=True)
     return engine
 
 
