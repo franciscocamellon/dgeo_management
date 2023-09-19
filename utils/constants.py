@@ -294,7 +294,7 @@ WHERE data_fim >= DATE_TRUNC('week', CURRENT_DATE)
     AND usuario.id = {};
 """
 
-SQL_TO_COUNT_ACTIVITY_TYPE = """
+SQL_TO_COUNT_ACTIVITY_TYPE_BY_SITUATION = """
 SELECT
     COUNT(activities_type.id) AS total,
     COUNT(CASE WHEN fase = 'Extração' THEN 1 END) AS extracao,
@@ -321,3 +321,154 @@ FROM (
     INNER JOIN 
         dominio.tipo_fase ON tipo_fase.code = tipo_fase_id ) AS activities_type
 WHERE activities_type.situacao = {};"""
+
+SQL_TO_COUNT_ACTIVITY_TYPE = """
+SELECT
+    COUNT(activities_type.id) AS total,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao != 4 THEN 1 END) AS extracao_total,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 4 THEN 1 END) AS extracao_finalizada,
+    COUNT(CASE WHEN fase = 'Validação' THEN 1 END) AS validacao,
+    COUNT(CASE WHEN fase = 'Edição' THEN 1 END) AS edicao,
+    COUNT(CASE WHEN fase = 'Disseminação' THEN 1 END) AS disseminacao
+FROM (
+    SELECT
+        atividade.id, 
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase 
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
+"""
+
+SQL_TO_COUNT_ACQUISITION = """
+SELECT
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 1 THEN 1 END) AS nao_iniciada,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 2 THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 3 THEN 1 END) AS pausada,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 4 THEN 1 END) AS finalizada,
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 5 THEN 1 END) AS nao_finalizada
+FROM (
+    SELECT
+        atividade.id,
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
+"""
+
+SQL_TO_COUNT_VALIDATION = """
+SELECT
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 1 THEN 1 END) AS nao_iniciada,
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 2 THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 3 THEN 1 END) AS pausada,
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 4 THEN 1 END) AS finalizada,
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 5 THEN 1 END) AS nao_finalizada
+FROM (
+    SELECT
+        atividade.id,
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
+"""
+
+SQL_TO_COUNT_EDITION = """
+SELECT
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 1 THEN 1 END) AS nao_iniciada,
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 2 THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 3 THEN 1 END) AS pausada,
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 4 THEN 1 END) AS finalizada,
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 5 THEN 1 END) AS nao_finalizada
+FROM (
+    SELECT
+        atividade.id,
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
+"""
+
+SQL_TO_COUNT_DISSEMINATION = """
+SELECT
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 1 THEN 1 END) AS nao_iniciada,
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 2 THEN 1 END) AS em_execucao,
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 3 THEN 1 END) AS pausada,
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 4 THEN 1 END) AS finalizada,
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 5 THEN 1 END) AS nao_finalizada
+FROM (
+    SELECT
+        atividade.id,
+        atividade.tipo_situacao_id AS situacao,
+        tipo_fase.nome AS fase
+    FROM 
+        macrocontrole.atividade
+    INNER JOIN 
+        macrocontrole.etapa ON etapa.id = etapa_id
+    INNER JOIN 
+        dominio.tipo_etapa ON tipo_etapa.code = tipo_etapa_id
+    INNER JOIN 
+        dominio.tipo_situacao ON tipo_situacao.code = tipo_situacao_id
+    INNER JOIN 
+        macrocontrole.subfase ON subfase.id = subfase_id
+    INNER JOIN 
+        macrocontrole.fase ON fase.id = fase_id
+    INNER JOIN 
+        dominio.tipo_fase ON tipo_fase.code = tipo_fase_id
+    ORDER BY etapa ASC
+) AS activities_type
+"""

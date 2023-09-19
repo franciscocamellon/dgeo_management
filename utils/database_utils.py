@@ -5,7 +5,8 @@ from sqlalchemy import create_engine, text
 from dgeo_management.settings import TIME_ZONE
 from utils.constants import DGEO_DATABASE_URL, MONTHLY_ACTIVITY_BY_USER, YEARS, SQL_TO_CHART_DATA, ACTIVITIES, \
     CURRENT_MONTHLY_ACTIVITY_BY_USER, SQL_TO_CHART_AVERAGE_DATA, WEEKLY_CHART_AVERAGE_DATA, SQL_TO_WEEKLY_CHART_DATA, \
-    SQL_TO_DONUT_CHART_DATA, MANAGEMENT_DATABASE_NAME
+    SQL_TO_DONUT_CHART_DATA, MANAGEMENT_DATABASE_NAME, SQL_TO_COUNT_ACTIVITY_TYPE, SQL_TO_COUNT_ACQUISITION, \
+    SQL_TO_COUNT_VALIDATION, SQL_TO_COUNT_EDITION, SQL_TO_COUNT_DISSEMINATION
 
 
 def get_current_month():
@@ -112,6 +113,25 @@ def project_donut_chart(project_id, prepare=False):
     return prepare_donut_chart_data(chart_dict)
 
 
+def fase_donut_chart():
+    chart_dict = {'acquisition': prepare_data_to_chart(SQL_TO_COUNT_ACQUISITION),
+                  'validation': prepare_data_to_chart(SQL_TO_COUNT_VALIDATION),
+                  'edition': prepare_data_to_chart(SQL_TO_COUNT_EDITION),
+                  'dissemination': prepare_data_to_chart(SQL_TO_COUNT_DISSEMINATION)}
+
+    return chart_dict
+
+
+def prepare_data_to_chart(sql):
+    chart_dict = {}
+    query_set = sql_execute(sql)
+
+    for row in query_set:
+        chart_dict.update(dict(zip(query_set.keys(), row)))
+
+    return chart_dict
+
+
 def calculate_percentage_difference(first_number, last_number):
     if last_number == 0:
         return round(0, 2)
@@ -156,7 +176,7 @@ def prepare_donut_chart_data(donut_chart_dict):
     tasks_query_set = sql_count_execute('SELECT COUNT(atividade.id) FROM macrocontrole.atividade')
 
     for label, data in donut_chart_dict.items():
-        donut_chart[label.title()] = round((data/tasks_query_set * 100),1)
+        donut_chart[label.title()] = round((data / tasks_query_set * 100), 1)
 
     return donut_chart
 
