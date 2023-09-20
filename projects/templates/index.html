@@ -2,6 +2,7 @@
 
 {% block content %}
 <!-- start page title -->
+
 <div class="row">
     <div class="col-12">
         <div class="page-title-box">
@@ -76,23 +77,25 @@
 
 
 <div class="row">
+    {% for fase, stats in project_stats.items %}
     <div class="col-lg-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title mb-4">Project Status</h4>
+
+                <h4 class="header-title mb-4">{{ fase.0 }}</h4>
 
                 <div dir="ltr">
-                    <div id="project-status-chart" class="apex-charts" data-colors="#fa6767,#e3eaef"></div>
+                    <div id="project-status-chart-{{fase.1}}" class="apex-charts" data-colors="#fa6767,#e3eaef"></div>
                 </div>
 
                 <div class="row text-center mt-2 py-2">
-                    {% for labels, data in statistics.items %}
+                    {% for sufase, data in stats.items %}
                     <div class="col-3">
                         <i class="mdi mdi-trending-up text-success mt-3 h4"></i>
                         <h4 class="fw-normal">
-                            <span>{{data}}%</span>
+                            <span>{{sufase}}%</span>
                         </h4>
-                        <p class="text-muted mb-0">{{labels}}</p>
+                        <p class="text-muted mb-0">{{data}}</p>
                     </div>
                     {% endfor %}
 
@@ -102,133 +105,9 @@
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
-    <div class="col-lg-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="dropdown float-end">
-                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="mdi mdi-dots-vertical"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Weekly Report</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Monthly Report</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">Settings</a>
-                    </div>
-                </div>
-                <h4 class="header-title mb-4">Project Status</h4>
 
-                <div class="my-4 chartjs-chart" style="height: 202px;">
-                    {{query}}
-                </div>
+    {% endfor %}
 
-                <div class="row text-center mt-2 py-2">
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-up text-success mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>64%</span>
-                        </h3>
-                        <p class="text-muted mb-0">Completed</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-primary mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>26%</span>
-                        </h3>
-                        <p class="text-muted mb-0"> In-progress</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-danger mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>10%</span>
-                        </h3>
-                        <p class="text-muted mb-0"> Behind</p>
-                    </div>
-                </div>
-                <!-- end row-->
-
-            </div> <!-- end card body-->
-        </div> <!-- end card -->
-    </div><!-- end col-->
-    <div class="col-lg-3">
-        <div class="card">
-            <div class="card-body">
-
-                <h4 class="header-title mb-4">Project Status</h4>
-
-                <div class="my-4 chartjs-chart" style="height: 202px;">
-                    <canvas id="" data-colors="#42d29d,#f9bc0d,#fa6767"></canvas>
-                </div>
-
-                <div class="row text-center mt-2 py-2">
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-up text-success mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>64%</span>
-                        </h3>
-                        <p class="text-muted mb-0">Completed</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-primary mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>26%</span>
-                        </h3>
-                        <p class="text-muted mb-0"> In-progress</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-danger mt-3 h3"></i>
-                        <h3 class="fw-normal">
-                            <span>10%</span>
-                        </h3>
-                        <p class="text-muted mb-0"> Behind</p>
-                    </div>
-                </div>
-                <!-- end row-->
-
-            </div> <!-- end card body-->
-        </div> <!-- end card -->
-    </div><!-- end col-->
-    <div class="col-lg-3">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-4">Project Status</h4>
-
-                <div class="my-4 chartjs-chart" style="height: 202px;">
-                    <canvas id="4" data-colors="#42d29d,#f9bc0d,#fa6767"></canvas>
-                </div>
-
-                <div class="row text-center mt-2 py-2">
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-up text-success mt-3 h4"></i>
-                        <h4 class="fw-normal">
-                            <span>64%</span>
-                        </h4>
-                        <p class="text-muted mb-0">Completed</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-primary mt-3 h4"></i>
-                        <h4 class="fw-normal">
-                            <span>26%</span>
-                        </h4>
-                        <p class="text-muted mb-0"> In-progress</p>
-                    </div>
-                    <div class="col-4">
-                        <i class="mdi mdi-trending-down text-danger mt-3 h4"></i>
-                        <h4 class="fw-normal">
-                            <span>10%</span>
-                        </h4>
-                        <p class="text-muted mb-0"> Behind</p>
-                    </div>
-                </div>
-                <!-- end row-->
-
-            </div> <!-- end card body-->
-        </div> <!-- end card -->
-    </div><!-- end col-->
 
 
 </div>
@@ -507,37 +386,37 @@
 <!-- end row-->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-var options={
-    chart:{
-        height:320,
-        type:"donut"
-    },
-    series:{{donut_chart_data|safe}},
-    legend:{
-        show:!0,
-        position:"bottom",
-        horizontalAlign:"center",
-        verticalAlign:"middle",
-        floating:!1,
-        fontSize:"14px",
-        offsetX:0,
-        offsetY:7
-    },
-    labels:{{donut_chart_label|safe}},
-    colors:["#39afd1","#ffbc00","#313a46","#fa5c7c","#0acf97"],
-    responsive:[
-        {
-            breakpoint:600,
-            options:{
-                chart:{height:240},
-                legend:{show:!1}
+    var options={
+        chart:{
+            height:320,
+            type:"donut"
+        },
+        series:{{fase.1|safe}},
+        legend:{
+            show:!0,
+            position:"bottom",
+            horizontalAlign:"center",
+            verticalAlign:"middle",
+            floating:!1,
+            fontSize:"14px",
+            offsetX:0,
+            offsetY:7
+        },
+        labels:{{donut_chart_label|safe}},
+        colors:["#39afd1","#ffbc00","#313a46","#fa5c7c","#0acf97"],
+        responsive:[
+            {
+                breakpoint:600,
+                options:{
+                    chart:{height:240},
+                    legend:{show:!1}
+                }
             }
-        }
-    ]
-};
-
-var chart = new ApexCharts(document.querySelector("#project-status-chart"),options)
-chart.render();
+        ]
+    };
+    var faseValue = {{fase.1|safe}};
+    var chart = new ApexCharts(document.querySelector("#project-status-chart-" + faseValue),options)
+    chart.render();
 </script>
 
 {% endblock content %}

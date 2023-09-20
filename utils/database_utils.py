@@ -114,10 +114,10 @@ def project_donut_chart(project_id, prepare=False):
 
 
 def fase_donut_chart():
-    chart_dict = {'acquisition': prepare_data_to_chart(SQL_TO_COUNT_ACQUISITION),
-                  'validation': prepare_data_to_chart(SQL_TO_COUNT_VALIDATION),
-                  'edition': prepare_data_to_chart(SQL_TO_COUNT_EDITION),
-                  'dissemination': prepare_data_to_chart(SQL_TO_COUNT_DISSEMINATION)}
+    chart_dict = {('Aquisição', 'acquisition'): prepare_data_to_chart(SQL_TO_COUNT_ACQUISITION),
+                  ('Validação', 'validation'): prepare_data_to_chart(SQL_TO_COUNT_VALIDATION),
+                  ('Edição', 'edition'): prepare_data_to_chart(SQL_TO_COUNT_EDITION),
+                  ('Disseminação', 'dissemination'): prepare_data_to_chart(SQL_TO_COUNT_DISSEMINATION)}
 
     return chart_dict
 

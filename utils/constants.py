@@ -358,8 +358,7 @@ SELECT
     COUNT(CASE WHEN fase = 'Extração' AND situacao = 1 THEN 1 END) AS nao_iniciada,
     COUNT(CASE WHEN fase = 'Extração' AND situacao = 2 THEN 1 END) AS em_execucao,
     COUNT(CASE WHEN fase = 'Extração' AND situacao = 3 THEN 1 END) AS pausada,
-    COUNT(CASE WHEN fase = 'Extração' AND situacao = 4 THEN 1 END) AS finalizada,
-    COUNT(CASE WHEN fase = 'Extração' AND situacao = 5 THEN 1 END) AS nao_finalizada
+    COUNT(CASE WHEN fase = 'Extração' AND situacao = 4 THEN 1 END) AS finalizada
 FROM (
     SELECT
         atividade.id,
@@ -388,8 +387,7 @@ SELECT
     COUNT(CASE WHEN fase = 'Validação' AND situacao = 1 THEN 1 END) AS nao_iniciada,
     COUNT(CASE WHEN fase = 'Validação' AND situacao = 2 THEN 1 END) AS em_execucao,
     COUNT(CASE WHEN fase = 'Validação' AND situacao = 3 THEN 1 END) AS pausada,
-    COUNT(CASE WHEN fase = 'Validação' AND situacao = 4 THEN 1 END) AS finalizada,
-    COUNT(CASE WHEN fase = 'Validação' AND situacao = 5 THEN 1 END) AS nao_finalizada
+    COUNT(CASE WHEN fase = 'Validação' AND situacao = 4 THEN 1 END) AS finalizada
 FROM (
     SELECT
         atividade.id,
@@ -418,8 +416,7 @@ SELECT
     COUNT(CASE WHEN fase = 'Edição' AND situacao = 1 THEN 1 END) AS nao_iniciada,
     COUNT(CASE WHEN fase = 'Edição' AND situacao = 2 THEN 1 END) AS em_execucao,
     COUNT(CASE WHEN fase = 'Edição' AND situacao = 3 THEN 1 END) AS pausada,
-    COUNT(CASE WHEN fase = 'Edição' AND situacao = 4 THEN 1 END) AS finalizada,
-    COUNT(CASE WHEN fase = 'Edição' AND situacao = 5 THEN 1 END) AS nao_finalizada
+    COUNT(CASE WHEN fase = 'Edição' AND situacao = 4 THEN 1 END) AS finalizada
 FROM (
     SELECT
         atividade.id,
@@ -448,8 +445,7 @@ SELECT
     COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 1 THEN 1 END) AS nao_iniciada,
     COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 2 THEN 1 END) AS em_execucao,
     COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 3 THEN 1 END) AS pausada,
-    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 4 THEN 1 END) AS finalizada,
-    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 5 THEN 1 END) AS nao_finalizada
+    COUNT(CASE WHEN fase = 'Disseminação' AND situacao = 4 THEN 1 END) AS finalizada
 FROM (
     SELECT
         atividade.id,
